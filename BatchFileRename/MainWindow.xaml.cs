@@ -56,8 +56,6 @@ namespace FullFolderRename
             {
                 RenameFolders(path);
             }
-
-            MessageBox.Show("Done!");
         }
 
         private void RenameFiles(string path)
@@ -153,6 +151,8 @@ namespace FullFolderRename
             ShouldRenameSubfolders = ChkBoxSubfolders.IsChecked == true;
 
             Rename(Folder);
+
+            MessageBox.Show("Done!");
         }
 
         #endregion
