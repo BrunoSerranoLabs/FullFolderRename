@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -63,26 +64,15 @@ namespace FullFolderRename
         {
             foreach (var file in Directory.GetFiles(path))
             {
-                var newPath = string.Empty;
-
                 var fileParts = file.Split('\\');
 
                 if (fileParts.Last().Contains(Find))
                 {
-                    for (int i = 0; i < fileParts.Length; i++)
-                    {
-                        var part = fileParts[i];
-                        if (i == fileParts.Length - 1)
-                        {
-                            part = part.Replace(Find, Replace);
-                        }
-
-                        newPath = Path.Combine(newPath, part);
-                    }
+                    var newPath = GetNewPath(fileParts);
 
                     if (file != newPath)
                     {
-                        Directory.Move(file, newPath);
+                        File.Move(file, newPath);
                     }
                 }
             }
@@ -93,22 +83,11 @@ namespace FullFolderRename
             foreach (var dir in Directory.GetDirectories(path))
             {
                 var dirFinal = dir;
-                var newPath = string.Empty;
 
                 var dirParts = dir.Split('\\');
-
                 if (dirParts.Last().Contains(Find))
                 {
-                    for (int i = 0; i < dirParts.Length; i++)
-                    {
-                        var part = dirParts[i];
-                        if (i == dirParts.Length - 1)
-                        {
-                            part = part.Replace(Find, Replace);
-                        }
-
-                        newPath = Path.Combine(newPath, part);
-                    }
+                    var newPath = GetNewPath(dirParts);
 
                     if (dir != newPath)
                     {
@@ -123,6 +102,24 @@ namespace FullFolderRename
                     Rename(dirFinal);
                 }
             }
+        }
+
+        private string GetNewPath(IEnumerable<string> fileParts)
+        {
+            var newPath = string.Empty;
+
+            for (int i = 0; i < fileParts.Count(); i++)
+            {
+                var part = fileParts.ElementAt(i);
+                if (i == fileParts.Count() - 1)
+                {
+                    part = part.Replace(Find, Replace);
+                }
+
+                newPath = Path.Combine(newPath, part);
+            }
+
+            return newPath;
         }
 
         #region Folder Selection
