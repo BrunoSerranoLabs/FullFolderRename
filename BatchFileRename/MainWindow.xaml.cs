@@ -130,6 +130,11 @@ namespace FullFolderRename
             };
 
             dialog.ShowDialog(this);
+            if (dialog == null || string.IsNullOrEmpty(dialog.FileName))
+            {
+                return;
+            }
+
             Folder = dialog.FileName;
         }
 
